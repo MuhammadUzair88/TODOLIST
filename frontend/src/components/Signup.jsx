@@ -13,7 +13,7 @@ function Signup() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/user/signup",
+        `${import.meta.env.VITE_BACKEND_URI}/user/signup`,
         {
           username,
           email,
@@ -28,7 +28,7 @@ function Signup() {
       );
       console.log(data);
       toast.success(data.message || "User registered successfully");
-      
+
       navigateTo("/home");
       setUserName("");
       setEmail("");

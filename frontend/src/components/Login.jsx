@@ -12,7 +12,7 @@ function Login() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/user/login",
+        `${import.meta.env.VITE_BACKEND_URI}/user/login`,
         {
           email,
           password,
@@ -26,7 +26,7 @@ function Login() {
       );
       console.log(data);
       toast.success(data.message || "User loggedin successfully");
-      
+
       navigateTo("/home");
       setEmail("");
       setPassword("");
