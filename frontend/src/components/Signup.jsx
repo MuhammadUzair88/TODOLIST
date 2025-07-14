@@ -13,7 +13,7 @@ function Signup() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:4001/user/signup",
+        "http://localhost:8000/user/signup",
         {
           username,
           email,
@@ -28,8 +28,8 @@ function Signup() {
       );
       console.log(data);
       toast.success(data.message || "User registered successfully");
-      localStorage.setItem("jwt", data.token);
-      navigateTo("/login");
+      
+      navigateTo("/home");
       setUserName("");
       setEmail("");
       setPassword("");

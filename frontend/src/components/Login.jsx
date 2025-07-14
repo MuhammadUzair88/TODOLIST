@@ -12,7 +12,7 @@ function Login() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:4001/user/login",
+        "http://localhost:8000/user/login",
         {
           email,
           password,
@@ -26,8 +26,8 @@ function Login() {
       );
       console.log(data);
       toast.success(data.message || "User loggedin successfully");
-      localStorage.setItem("jwt", data.token);
-      navigateTo("/");
+      
+      navigateTo("/home");
       setEmail("");
       setPassword("");
     } catch (error) {

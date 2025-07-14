@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Add from "./Add";
 
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -8,12 +9,13 @@ function Home() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [newTodo, setNewTodo] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     const fetchtodos = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:4001/todo/fetch", {
+        const response = await axios.get("http://localhost:8000/todo/fetch", {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
@@ -35,7 +37,7 @@ function Home() {
     if (!newTodo) return;
     try {
       const response = await axios.post(
-        "http://localhost:4001/todo/create",
+        "http://localhost:8000/todo/create",
         {
           text: newTodo,
           completed: false,
@@ -56,7 +58,7 @@ function Home() {
     const todo = todos.find((t) => t._id === id);
     try {
       const response = await axios.put(
-        `http://localhost:4001/todo/update/${id}`,
+        `http://localhost:8000/todo/update/${id}`,
         {
           ...todo,
           completed: !todo.completed,
@@ -74,7 +76,7 @@ function Home() {
 
   const todoDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/todo/delete/${id}`, {
+      await axios.delete(`http://localhost:8000/todo/delete/${id}`, {
         withCredentials: true,
       });
       setTodos(todos.filter((t) => t._id !== id));
@@ -86,7 +88,7 @@ function Home() {
   const navigateTo = useNavigate();
   const logout = async () => {
     try {
-      await axios.get("http://localhost:4001/user/logout", {
+      await axios.get("http://localhost:8000/user/logout", {
         withCredentials: true,
       });
       toast.success("User logged out successfully");
@@ -97,12 +99,35 @@ function Home() {
     }
   };
 
-  const remainingTodos = todos.filter((todo) => !todo.completed).length;
+  const remainingTodos = (todos || []).filter((todo) => !todo.completed).length;
+
 
   return (
     <div className=" my-10 bg-gray-100 max-w-lg lg:max-w-xl rounded-lg shadow-lg mx-8 sm:mx-auto p-6">
-      <h1 className="text-2xl font-semibold text-center">Todo App</h1>
-      <div className="flex mb-4">
+      <h1 className="text-2xl mb-4 font-semibold text-center">Todo App</h1>
+
+      <button
+  onClick={() => setOpenDialog(true)}
+  className="mb-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-800 duration-300 block mx-auto"
+>
+  + Add New Todo
+</button>
+
+{openDialog && (
+  <Add
+    newTodo={newTodo}
+    setNewTodo={setNewTodo}
+    todoCreate={todoCreate}
+    closeDialog={() => setOpenDialog(false)}
+  />
+)}
+
+
+
+
+
+
+      {/* <div className="flex mb-4 ">
         <input
           type="text"
           placeholder="Add a new todo"
@@ -117,7 +142,11 @@ function Home() {
         >
           Add
         </button>
-      </div>
+      </div> */}
+
+
+
+
       {loading ? (
         <div className="text-center justify-center">
           <span className="textgray-500">Loading...</span>
